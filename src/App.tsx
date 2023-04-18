@@ -1,10 +1,14 @@
 import React, {useState} from 'react';
+import { Circles } from 'react-loader-spinner';
 
 //Import Components
 import Question from './components/Question';
 
 //Importing types
 import { QuestionsState, difficulty_tpye, fetchQuizQuestions } from "./api";
+
+//Importing styles
+import { GlobalStyle, Wrapper } from "./App.styles";
 
 export type AnswerObjectType = {
   question: string;
@@ -67,7 +71,7 @@ function App() {
     }
   };
 
-  console.log(userAnswers)
+  //console.log(userAnswers)
 
   const nextQuestion = () => {//a function triggered for the next question
     //-set the value of the next questiom
@@ -85,38 +89,50 @@ function App() {
 
 
   return (
-    <div className="App">
-      <h1>QUIZ GAME</h1>
-      {gameOver || userAnswers.length === TOTAL_QUESTIONS ? (
-        <button className="start" onClick={startQuiz}>
-          Start
-        </button>
-      ) : null}
-      {!gameOver ? <p className="score">Score: {score}</p> : null}
-      {loading && (
-        <div>
-          <p>Loading Questions.....</p>
-          <p>Add a Spinner</p>
-        </div>
-      )}
-      {!loading && !gameOver && (
-        <Question
-          questionNr={number + 1}
-          totalQuestions={TOTAL_QUESTIONS}
-          question={questions[number].question}
-          answers={questions[number].answers}
-          userAnswer={userAnswers ? userAnswers[number] : undefined}
-          callback={selectAnswer}
-        />
-      )}
-      {
-        !gameOver && !loading && userAnswers.length === number +1 && number !== TOTAL_QUESTIONS - 1 ? (
-          <button className='next' onClick={nextQuestion}>
+    <>
+      <GlobalStyle />
+      <Wrapper>
+        <h1>QUIZ GAME</h1>
+        {gameOver || userAnswers.length === TOTAL_QUESTIONS ? (
+          <button className="start" onClick={startQuiz}>
+            Start
+          </button>
+        ) : null}
+        {!gameOver ? <p className="score">Score: {score}</p> : null}
+        {loading && (
+          <div>
+            <p>Loading Questions.....</p>
+            <Circles
+              height="80"
+              width="80"
+              color="#fff"
+              ariaLabel="circles-loading"
+              wrapperStyle={{}}
+              wrapperClass=""
+              visible={true}
+            />
+          </div>
+        )}
+        {!loading && !gameOver && (
+          <Question
+            questionNr={number + 1}
+            totalQuestions={TOTAL_QUESTIONS}
+            question={questions[number].question}
+            answers={questions[number].answers}
+            userAnswer={userAnswers ? userAnswers[number] : undefined}
+            callback={selectAnswer}
+          />
+        )}
+        {!gameOver &&
+        !loading &&
+        userAnswers.length === number + 1 &&
+        number !== TOTAL_QUESTIONS - 1 ? (
+          <button className="next" onClick={nextQuestion}>
             Next Question
           </button>
-        ) : null
-      }
-    </div>
+        ) : null}
+      </Wrapper>
+    </>
   );
 }
 
