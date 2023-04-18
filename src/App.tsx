@@ -17,7 +17,7 @@ function App() {
 
   const [loading, setLoading] = useState(false);
   const [questions, setQuestions] = useState<QuestionsState[]>([]);
-  const [number, setNumber] =useState(0);
+  const [number, setNumber] =useState(0);//NB the numbers start at zero since our array indexes start at zero
   const [userAnswers, setUserAnswers] = useState<AnswerObjectType[]>([]);
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(true);
@@ -42,10 +42,43 @@ function App() {
   };
 
   const selectAnswer = (e: React.MouseEvent<HTMLButtonElement>) => {//we need kto specify the type of the event
-    
+    if(!gameOver){
+      //Answer from the user
+      const answer = e.currentTarget.value;
+
+      //check the answer if correct
+      const correct = questions[number].correct_answer === answer;
+
+      //add score if answer is correct
+      if(correct){
+        setScore( prev => prev + 1)
+      };
+
+      //Save answer in the array for user answers
+      const answerObject = {
+        question: questions[number].question,
+        answer,
+        correct,
+        correctAnswer: questions[number].correct_answer
+      };
+
+      //an array of userANSWERS
+      setUserAnswers(prev => [...prev, answerObject]); 
+    }
   };
 
+  console.log(userAnswers)
+
   const nextQuestion = () => {//a function triggered for the next question
+    //-set the value of the next questiom
+    const nextQuestionNumber: number = number + 1;
+
+    //check if the next question number is not greater than the number of questions
+    if( nextQuestionNumber === TOTAL_QUESTIONS ){
+      setGameOver(true);
+    }else{
+      setNumber(nextQuestionNumber);
+    }
 
   };
 
